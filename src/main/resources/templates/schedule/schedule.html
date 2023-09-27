@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <title>스케줄</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Custom Google font-->
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet"/>
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="/css/styles.css" rel="stylesheet" />
+        <!--Jquery-->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bPopup/0.11.0/jquery.bpopup.min.js"></script>
+        <!-- 풀 캘린더 -->
+        <link href="/css/calendar.css" rel="stylesheet"/>
+        <script src="/js/calendar.js"></script>
+        <script src="/js/ko.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    locale: "ko",
+                    headerToolbar: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+				     },
+                    initialView: 'dayGridMonth',
+                    googleCalendarApiKey: 'AIzaSyA_03qsQ6pwMDEVM9rewMo6kzhxaVCfuPY', // 여기에 Google Calendar API 키를 넣어야 합니다.
+                    eventSources:[
+                    {
+                        googleCalendarId: '4672f6a05905b262bfc369c7136878af9ca5eabc7371dde14553b9653dc5a374@group.calendar.google.com', // 여기에 Google Calendar ID를 넣어야 합니다.
+                        className: 'gcal-event', // 옵션
+                        color: '#2E64FE'
+                    },
+                    {
+                        googleCalendarId: 'ko.south_korea#holiday@group.v.calendar.google.com',
+                        color: '#FA5858'
+
+                    }
+                    ],
+                    //클릭시 이벤트
+                    eventClick: function(info) {
+                        let start_year = info.event.start.getUTCFullYear();
+                        let start_month = info.event.start.getMonth() + 1;
+                        let start_date = info.event.start.getUTCDate();
+                        let start_hour = info.event.start.getHours();
+                        let start_minute = info.event.start.getMinutes();
+                        let start_second = info.event.start.getSeconds();
+                        let end_hour = info.event.end.getHours();
+
+                        let start = start_year + "년 " + start_month + "월 " + start_date + "일 " +" | "+start_hour + "시 "+" ~ " + end_hour + "시";
+
+                        //내용 불러오기
+                        let attends = "";
+                        info.event.extendedProps.attachments.forEach(function(item) {
+                            attends += "<div><a href='"+item.fileUrl+"' target='_blank'>[첨부파일]</a></div>"
+                        });
+
+                        let contents = `
+                            <div style='font-weight:bold; font-size:20px; margin-bottom:30px; text-align:center'>
+                                ${start}
+                            </div>
+                            <div style='font-size:18px; margin-bottom:5px'>
+                                ${info.event.title}
+                            </div>
+                            <hr>
+                            <div style='width:500px'>
+                                 ${info.event.extendedProps.description ? info.event.extendedProps.description : ''}
+                                ${attends}
+                            </div>
+                        `;
+
+                        $("#popup").html(contents);
+                        $("#popup").bPopup({
+                            speed: 500,
+                            transition: 'slideIn',
+                            transitionClose: 'slideBack',
+                            position: [($(document).width()-500)/2, 300] //x, y
+                        });
+                        info.jsEvent.stopPropagation();
+                        info.jsEvent.preventDefault();
+                    }
+                });
+                calendar.render();
+            });
+        </script>
+    </head>
+    <body class="d-flex flex-column h-100">
+        <main class="flex-shrink-0">
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light py-3">
+                <div class="container px-5">
+                    <a class="navbar-brand" href="/index.html"><span class="fw-bolder text-gradient">flomis_9</span></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                            <li class="nav-item text-gradient"><a class="nav-link" href="/notice/list">공지사항</a></li>
+                            <li class="nav-item text-gradient"><a class="nav-link" href="/schedule">스케줄</a></li>
+                            <li class="nav-item text-gradient"><a class="nav-link" href="/place">지도</a></li>
+                            <li class="nav-item text-gradient"><a class="nav-link" href="/board">자유게시판</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Section -->
+            <section class="py-5">
+                <div class="container px-4 px-lg-5 mt-5 d-flex justify-content-center">
+                    <!-- 스케줄 api  -->
+                    <div class="col-lg-10 mx-auto">
+                        <h2 class="fw-bolder">스케줄</h2>
+                        <div id="calendar" class="mt-4"></div>
+                        <div id='popup' style="width:500px; height:600px; display:none; background-color:white; padding:20px; border-radius:14px; border:2px solid #eeeeee"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Footer-->
+        <footer class="bg-white py-4 mt-auto">
+            <!-- About Section-->
+            <section class="bg-light py-1">
+                <div class="container px-5">
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-xxl-8">
+                            <div class="text-center my-1">
+                                <div class="d-flex justify-content-center fs-2 gap-4">
+                                    <a class="text-gradient" href="https://twitter.com/realfromis_9" target="_blank" rel="noopener noreferrer"><i class="bi bi-twitter"></i></a>
+                                    <a class="text-gradient" href="https://instagram.com/officialfromis_9" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a>
+                                    <a class="text-gradient" href="https://www.youtube.com/channel/UC8qO5racajmy4YgPgNJkVXg" target="_blank" rel="noopener noreferrer"><i class="bi bi-youtube"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--Copyright-->
+            <div class="container px-5 mt-3">
+                <div class="row align-items-center justify-content-center flex-column flex-sm-row">
+                    <div class="col-auto">
+                        <a class="small" href="#!">이용약관</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">개인정보처리방침</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">문의/신고</a>
+                        <div class="col-auto text-center mt-1">
+                            <div class="small m-0">Copyright &copy; fromis Website 2023</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="/js/scripts.js"></script>
+    </body>
+</html>
