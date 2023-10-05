@@ -5,6 +5,8 @@ import com.fromis.fromis.entity.Board;
 import com.fromis.fromis.repository.BoardRepository;
 import com.fromis.fromis.repository.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +18,9 @@ public class BoardService {
     private BoardRepository boardRepository;
 
     //글 목록
-    public List<Board> boardList(){
-        return boardRepository.findAllDesc();
+    public Page<Board> boardList(Pageable pageable){
+
+        return boardRepository.findAll(pageable);
     }
     //글 작성
     public void boardwrite(Board board){

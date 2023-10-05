@@ -3,6 +3,8 @@ package com.fromis.fromis.service;
 import com.fromis.fromis.entity.Notice;
 import com.fromis.fromis.repository.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +16,9 @@ public class NoticeService {
     private NoticeRepository noticeRepository;
 
     //게시글 목록 처리
-    public List<Notice> noticeList(){
+    public Page<Notice> noticeList(Pageable pageable){
 
-        return noticeRepository.findAllDesc();
+        return noticeRepository.findAll(pageable);
     };
     //공지 작성
     public void write(Notice notice){

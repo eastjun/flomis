@@ -3,6 +3,10 @@ package com.fromis.fromis.controller;
 import com.fromis.fromis.entity.Board;
 import com.fromis.fromis.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,17 +21,27 @@ public class BoardController {
 
     //글 목록
     @GetMapping("/board")
-    public String boardList(Model model){
+    public String boardList(Model model, @PageableDefault(page = 0, size = 10, sort = "num", direction = Sort.Direction.DESC) Pageable pageable){
 
-        model.addAttribute("list",boardService.boardList());
+        Page<Board> list= boardService.boardList(pageable);
+        int nowPage= list.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4,1);
+        int endPage= Math.min(nowPage+5,list.getTotalPages());
+
+        model.addAttribute("list",list);
+        model.addAttribute("nowPage",nowPage);
+        model.addAttribute("startPage",startPage);
+        model.addAttribute("endPage",endPage);
 
         return "/board/board";
     }
     //글 작성 페이지 이동
     @GetMapping("/board/write")
     public String boardWrite(){
+
         return "/board/boardwrite";
     }
+    //글 작성
     @PostMapping("/board/write")
     public String boardInsert(Board board, Model model){
         boardService.boardwrite(board);

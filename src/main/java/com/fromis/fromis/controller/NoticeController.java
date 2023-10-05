@@ -3,17 +3,15 @@ package com.fromis.fromis.controller;
 import com.fromis.fromis.entity.Notice;
 import com.fromis.fromis.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
 
 @Controller
 public class NoticeController {
@@ -23,9 +21,18 @@ public class NoticeController {
 
     //글 목록
     @GetMapping("/notice/list")
-    public String notice(Model model){
+    public String notice(Model model, @PageableDefault(page = 0,size = 10,sort = "num",direction = Sort.Direction.DESC) Pageable pageable){
 
-        model.addAttribute("list",noticeService.noticeList());
+        Page<Notice> list =noticeService.noticeList(pageable);
+
+        int nowPage= list.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4,1);
+        int endPage= Math.min(nowPage+5,list.getTotalPages());
+
+        model.addAttribute("list", list);
+        model.addAttribute("nowPage",nowPage);
+        model.addAttribute("startPage",startPage);
+        model.addAttribute("endPage",endPage);
 
         return "/notice/notice";
     }

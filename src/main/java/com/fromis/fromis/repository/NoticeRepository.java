@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice,Integer> {
 
-    @Query("SELECT n FROM Notice n ORDER BY n.num DESC")
-    List<Notice> findAllDesc();
+//    @Query("SELECT n FROM Notice n ORDER BY n.num DESC")
+//    List<Notice> findAllDesc();
 
 }
