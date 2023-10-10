@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface NoticeRepository extends JpaRepository<Notice,Integer> {
+public interface NoticeRepository extends JpaRepository<Notice,Long> {
 
 //    @Query("SELECT n FROM Notice n ORDER BY n.num DESC")
 //    List<Notice> findAllDesc();

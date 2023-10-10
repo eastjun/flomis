@@ -22,8 +22,15 @@
             <a class="navbar-brand" th:href="@{/}"><span class="fw-bolder text-gradient">flomis_9</span></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-2 mb-lg-0 small fw-bolder">
+                    <li class="nav-item text-secondary"><a class="nav-link" th:href="@{/#}" sec:authorize="isAuthenticated()">내 정보</a></li>
+                    <li class="nav-item text-info">
+                        <form id="logoutForm" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                            <a class="nav-link" href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();">로그아웃</a>
+                        </form>
+                    </li>
+                </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
-
                     <li class="nav-item text-gradient"><a class="nav-link" th:href="@{/notice/list}">공지사항</a></li>
                     <li class="nav-item text-gradient"><a class="nav-link" th:href="@{/schedule}">스케줄</a></li>
                     <li class="nav-item text-gradient"><a class="nav-link" th:href="@{/place}">지도</a></li>
@@ -33,12 +40,7 @@
                             <i class="bbi bi-arrow-right-square-fill" style="font-size: 17px;"></i>
                         </a>
                     </li>
-                    <li class="nav-item text-secondary"><a class="nav-link" th:href="@{/#}" sec:authorize="isAuthenticated()">내 정보</a></li>
-                    <li class="nav-item text-info">
-                        <form id="logoutForm" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
-                            <a class="nav-link" href="javascript:void(0);" onclick="logout();">로그아웃</a>
-                        </form>
-                    </li>
+
                 </ul>
             </div>
         </div>
@@ -78,6 +80,5 @@
             </div>
         </div>
     </footer>
-
 </body>
 </html>

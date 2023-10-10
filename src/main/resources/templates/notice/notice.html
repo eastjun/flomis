@@ -41,11 +41,15 @@
                             <td th:text="${notice.num}" style="text-align: center;"></td>
                             <td style="text-align: center;">
                                 <a th:href="@{/notice/view/(num=${notice.num})}" th:text="${notice.title}" style="text-decoration:none; color:black;">제목</a></td>
-                            <td th:text="${notice.name}" style="text-align: center;">글쓴이</td>
-                            <td th:with="currentDate=${T(java.time.LocalDateTime).now()},currentHourMinute=${#temporals.format(currentDate, 'HH:mm')},
-                                           formattedDate=${currentHourMinute == #temporals.format(notice.writeday, 'HH:mm') ? currentHourMinute : #temporals.format(notice.writeday, 'yyyy-MM-dd')}"
-                                th:text="${formattedDate}"
-                                style="text-align: center;">작성일
+                            <td th:text="${notice.username}" style="text-align: center;">글쓴이</td>
+<!--                            <td th:text="${#temporals.format(notice.createdTime, 'yyyy-MM-dd')}" style="text-align: center;">작성일</td>-->
+                            <td style="text-align: center;">
+                                <span th:if="${#temporals.format(notice.createdTime, 'yyyy-MM-dd') == #temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                                      th:text="${#temporals.format(notice.createdTime, 'HH:mm')}">작성일</span>
+                                <span th:unless="${#temporals.format(notice.createdTime, 'yyyy-MM-dd') == #temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                                      th:text="${#temporals.format(notice.createdTime, 'yyyy-MM-dd')}">작성일</span>
+                            </td>
+
                             </td>
                             <td th:text="${notice.hit}" style="text-align: center;">조회수</td>
                         </tr>

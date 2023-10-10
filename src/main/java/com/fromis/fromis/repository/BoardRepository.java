@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BoardRepository extends JpaRepository<Board,Integer> {
-    @Query("SELECT n from Board n ORDER BY n.num DESC")
-    List<Board> findAllDesc();
+public interface BoardRepository extends JpaRepository<Board,Long> {
+//    @Query("SELECT n from Board n ORDER BY n.num DESC")
+//    List<Board> findAllDesc();
 }

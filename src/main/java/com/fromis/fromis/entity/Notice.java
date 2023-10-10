@@ -9,19 +9,16 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-public class Notice {
+public class Notice extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer num;
+    private Long num;
 
     private String title;
 
     private String content;
 
-    private String name;
-
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime writeday;
+    private String username;
 
     private Integer hit;
 
@@ -29,8 +26,5 @@ public class Notice {
 
     private String filepath;
 
-    @PrePersist
-    protected void onCreate(){
-        writeday=LocalDateTime.now();
-    }
+
 }

@@ -2,18 +2,21 @@ package com.fromis.fromis.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
-public class Board {
+public class Board extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer num;
+    private Long id;
 
     private String title;
 
@@ -21,18 +24,13 @@ public class Board {
 
     private Integer hit;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime writeday;
-
-    private String id;
+    private String username;
 
     private String filename;
 
     private String filepath;
 
-    @PrePersist
-    protected void onCreate(){
-        writeday=LocalDateTime.now();
-    }
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE,orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Comment> commentList = new ArrayList<>();
 }
 

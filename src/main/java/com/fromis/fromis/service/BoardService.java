@@ -31,8 +31,8 @@ public class BoardService {
         boardRepository.save(board);
     }
     //글 보기
-    public Board boardView(Integer num){
-        Board board = boardRepository.findById(num).get();
+    public Board boardView(Long id){
+        Board board = boardRepository.findById(id).get();
         if (board !=null){
             board.setHit(board.getHit()+1);
             boardRepository.save(board);
@@ -40,9 +40,9 @@ public class BoardService {
         return board;
     }
     //글 삭제
-    public void boardDelete(Integer num){
+    public void boardDelete(Long id){
 
-        boardRepository.deleteById(num);
+        boardRepository.deleteById(id);
     }
     
     

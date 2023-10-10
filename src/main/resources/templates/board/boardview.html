@@ -1,71 +1,156 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <title>게시물</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Custom Google font-->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="/css/styles.css" rel="stylesheet" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>게시물</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
+    <!-- Custom Google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet"/>
+    <!-- Jquery cnd -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    </head>
-    <body class="d-flex flex-column h-100">
-        <main class="flex-shrink-0">
-            <!-- Navigation-->
-            <nav th:replace="fragments/common :: nav">
-            </nav>
 
-            <!-- Section -->
-            <section class="py-5">
-                <div class="container px-4 px-lg-5 mt-5 d-flex justify-content-center">
-                    <div class="col-lg-10">
-                        <h2 class="fw-bolder">자유게시판</h2>
-                        <form method="post">
-                            <div class="container mt-5">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 th:text="${board.title}">제목 </h3>
-                                        <small class="text-muted" th:text="'작성자: '+${board.id}+'l ' +'작성시간: '+${board.writeday}"> </small>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="card-text" th:utext="${board.content}">내용</p>
-                                    </div>
-                                </div>
-                                <a href="/board" class="btn btn-primary mt-3">목록</a>
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <!-- Navigation-->
+    <nav th:replace="fragments/common :: nav">
+    </nav>
+
+    <!-- Section -->
+    <section class="pt-5">
+        <div class="container px-4 px-lg-5 mt-5 d-flex justify-content-center">
+            <div class="col-lg-10">
+                <h2 class="fw-bolder">자유게시판</h2>
+                <div class="container mt-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 th:text="${board.title}">제목 </h3>
+                            <div class="d-flex justify-content-between mt-2">
+                                <small class="text-muted" th:text="'작성자: ' + ${board.username}"> </small>
+                                <small class="text-muted" th:text="'작성시간: ' + ${#temporals.format(board.createdTime, 'yyyy-MM-dd HH:mm')}"> </small>
                             </div>
-                            <div class="mt-3 d-flex justify-content-end">
-                                <a th:href="@{/board/edit/{num}(num=${board.num})}" class="btn btn-primary me-2">수정</a>
-                                <a th:href="@{/board/delete(num=${board.num})}" class="btn btn-danger" id="delete">삭제</a>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text" th:utext="${board.content}">내용</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <div>
+                                <a th:href="@{/board}" class="btn btn-outline-secondary">목록</a>
                             </div>
-                        </form>
+                            <div>
+                                <a th:href="@{/board/edit/{id}(id=${board.id})}" class="btn btn-primary mx-2">수정</a>
+                                <a th:href="@{/board/delete(id=${board.id})}" class="btn btn-danger" id="delete">삭제</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
-        </main>
-        <!-- footer -->
-        <footer th:replace="fragments/common :: footer"></footer>
+            </div>
+        </div>
+    </section>
+    <!-- 댓글 -->
+    <section class="py-2">
+        <!--댓글 입력 부분-->
+        <div class="container px-4 px-lg-5 mt-5 d-flex justify-content-center">
+            <div class="col-lg-10 card" id="comment-write">
+                <input type="text" id="commentWriter" placeholder="작성자">
+                <div class="card-body"><textarea class="form-control" id="commentContents"></textarea></div>
+                <div class="card-footer d-flex justify-content-end">
+                    <button class="btn btn-primary" id="comment-write-btn" onclick="commentWrite()">등록</button>
+                </div>
+            </div>
+        </div>
 
-        <script>
-            document.getElementById('delete').addEventListener(
-                'click',
-                function(event) {
-                    const result = confirm('정말로 이 게시물을 삭제하시겠습니까?');
-                    if (!result) {
-                        event.preventDefault();
-                    }
-                }
-            );
-        </script>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="/js/scripts.js"></script>
-    </body>
+        <!-- 댓글 출력 부분 -->
+        <div class="container px-4 px-lg-5 mt-4 d-flex justify-content-center">
+            <div class="col-lg-10 card">
+                <div class="card-header">댓글 목록</div>
+                <ul class="list-group" id="comment-list">
+                    <li th:each="comment: ${commentList}" class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <div th:text="${comment.commentWriter}"></div>
+                            <div>
+                                <small th:text="${comment.commentCreatedTime}"></small>
+                                <button class="badge text-bg-success mx-1">삭제</button>
+                             </div>
+                        </div>
+                        <div class="mt-3" th:text="${comment.commentContents}"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- footer -->
+<footer th:replace="fragments/common :: footer"></footer>
+
+<script th:inline="javascript">
+
+    document.getElementById('delete').addEventListener(
+        'click',
+        function(event) {
+            const result = confirm('정말로 이 게시물을 삭제하시겠습니까?');
+            if (!result) {
+                event.preventDefault();
+            }
+        }
+    );
+
+    //댓글
+    const commentWrite = () => {
+        const writer = document.getElementById("commentWriter").value;
+        const contents = document.getElementById("commentContents").value;
+        console.log("작성자: ", writer);
+        console.log("내용: ", contents);
+        const id =[[${board.id}]]; // 게시글 번호
+
+        $.ajax({
+        //요청방식: post, 요청주소: /comment/save, 요청 데이터: 작성자, 내용, 글번호
+            type : "post",
+            url : "/comment/save",
+            data: {
+                  "commentWriter" : writer,
+                  "commentContents" : contents,
+                  "boardId" : id
+            },
+           success: function (res) {
+               console.log("요청성공", res);
+                      let output = '<ul class="list-group">';
+                   for (let i in res) {
+                       output += '<li class="list-group-item">';
+                       output += '<div class="d-flex justify-content-between">';
+                       output += '<div>' + res[i].commentWriter + '</div>';
+                       output += '<div>';
+                       output += '<small>' + res[i].commentCreatedTime + '</small>';
+                       output += '<button class="badge text-bg-success mx-1">' + '삭제' + '</button>';
+                       output += '</div>';
+                       output += '</div>';
+                       output += '<div class="mt-3">' + res[i].commentContents + '</div>';
+                       output += '</li>';
+                   }
+                   output += '</ul>';
+                   document.getElementById('comment-list').innerHTML = output;
+                   document.getElementById('commentWriter').value = '';
+                   document.getElementById('commentContents').value = '';
+               },
+           error: function (err) {
+               console.log("요청실패", err);
+               }
+              });
+        }
+</script>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="/js/scripts.js"></script>
+</body>
 </html>

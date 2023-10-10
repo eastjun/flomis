@@ -30,7 +30,7 @@ public class NoticeService {
     };
 
     //특정 게시물 보기
-    public Notice noticeView(Integer num){
+    public Notice noticeView(Long num){
 
         //System.out.println("넘어오는 지, 값 확인 ---"+ num);
 
@@ -43,7 +43,7 @@ public class NoticeService {
 
     }
     //공지 삭제
-    public void  noticeDelete(Integer num){
+    public void  noticeDelete(Long num){
 
         noticeRepository.deleteById(num);
     }
