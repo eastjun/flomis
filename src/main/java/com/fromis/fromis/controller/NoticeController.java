@@ -46,7 +46,7 @@ public class NoticeController {
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
 
-        return "/notice/notice";
+        return "notice/notice";
     }
     //글 작성 페이지 이동
     @GetMapping("/notice/write")
