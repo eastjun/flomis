@@ -41,13 +41,13 @@ public class BoardController {
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
 
-        return "/board/board";
+        return "board/board";
     }
     //글 작성 페이지 이동
     @GetMapping("/board/write")
     public String boardWrite(){
 
-        return "/board/boardwrite";
+        return "board/boardwrite";
     }
     //글 작성
     @PostMapping("/board/write")
@@ -72,7 +72,7 @@ public class BoardController {
         model.addAttribute("commentList", commentDTOList);
         
         model.addAttribute("board",boardService.boardView(id));
-        return "/board/boardview";
+        return "board/boardview";
     }
     //글 삭제
     @GetMapping("/board/delete")
@@ -86,7 +86,7 @@ public class BoardController {
     @GetMapping("/board/edit/{id}")
     public String boardEdit(@PathVariable("id") Long id, Model model){
         model.addAttribute("board",boardService.boardView(id));
-        return "/board/boardedit";
+        return "board/boardedit";
     }
     @PostMapping("/board/edit/{id}")
     public String boardUpdate(@PathVariable("id") Long id, Board board){

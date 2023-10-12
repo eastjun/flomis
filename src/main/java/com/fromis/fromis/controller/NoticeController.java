@@ -20,16 +20,6 @@ public class NoticeController {
     @Autowired
     private NoticeService noticeService;
 
-    //로그인한 정보에서 닉네임 가져오기
-    private String getCurrentUserNickname() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) principal;
-            return userDetails.getUsername(); // 여기에서 닉네임이 사용자의 username으로 가정합니다.
-        } else {
-            return null; // 사용자 정보를 가져올 수 없는 경우
-        }
-    }
     //글 목록
     @GetMapping("/notice/list")
     public String notice(Model model, @PageableDefault(page = 0,size = 10,sort = "num",direction = Sort.Direction.DESC) Pageable pageable){
@@ -53,7 +43,7 @@ public class NoticeController {
     public String noticeWrite(){
 
 
-        return "/notice/noticewrite";
+        return "notice/noticewrite";
     }
     //글 작성
     @PostMapping("/notice/write")
@@ -74,7 +64,7 @@ public class NoticeController {
     public String noticeSelect(Model model,Long num){
         //System.out.println("넘어오는 값을 확인----"+ num);
         model.addAttribute("notice",noticeService.noticeView(num));
-        return "/notice/noticeview";
+        return "notice/noticeview";
     }
     //글 삭제
     @GetMapping("/notice/delete")
@@ -89,7 +79,7 @@ public class NoticeController {
     @GetMapping("/notice/edit/{num}")
     public String noticeEdit(@PathVariable("num") Long num, Model model){
         model.addAttribute("notice",noticeService.noticeView(num));
-        return"/notice/noticeedit";
+        return "notice/noticeedit";
     }
     @PostMapping("/notice/edit/{num}")
     public  String noticeUpdate(@PathVariable("num")Long num, Notice notice){

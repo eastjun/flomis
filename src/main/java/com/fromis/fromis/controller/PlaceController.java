@@ -9,6 +9,6 @@ public class PlaceController {
     @GetMapping("/place")
     public String placeView(){
 
-        return "/place/place";
+        return "place/place";
     }
 }
